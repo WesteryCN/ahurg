@@ -2,6 +2,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Models\Classes;
+use App\Models\Free_class;
 use Illuminate\Http\Request;
 
     /**
@@ -115,6 +117,41 @@ class StudentController extends Controller
 
     }
 
+
+
+    public static function listclasses(Request $request){
+        $data = [];
+        try{
+            $data = Free_class::listclass();
+            if($data['code'] == '1'){
+                return apiResponse('0', '班级信息获取成功！', $data) ;
+            }else{
+                return apiResponse('401', '班级不存在！', $data) ;
+            }
+        }catch (\Exception $e) {
+            return $e;
+            //return $this->internalErrRes();
+        }
+
+
+    }
+
+    public static function listfree(Request $request){
+        $data = [];
+        try{
+            $data = Free_class::listfree($request->input('c_id'));
+            if($data['code'] == '1'){
+                return apiResponse('0', '教室空闲信息获取成功！', $data) ;
+            }else{
+                return apiResponse('401', '教室不存在！', $data) ;
+            }
+        }catch (\Exception $e) {
+            return $e;
+            //return $this->internalErrRes();
+        }
+
+
+    }
 
 }
 

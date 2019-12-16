@@ -39,10 +39,6 @@ Route::middleware(['token.checkAndRenew.teacher'])->prefix('teacher')->group(fun
     Route::post('delstd', 'TeacherController@delstd'); //删除学生
     Route::post('setstdinfo', 'TeacherController@setstdinfo'); //修改学生信息
 
-    Route::post('getclass', 'ClassController@getinfo'); //列出班级
-    Route::get('getclass', 'ClassController@getinfo'); //列出班级
-    Route::post('addclass', 'ClassController@addclass'); //添加班级
-    Route::post('delclass', 'ClassController@delclass'); //删除班级
 
 });
 
@@ -52,6 +48,8 @@ Route::middleware(['token.checkAndRenew.student'])->prefix('student')->group(fun
     Route::get('logout', 'StudentController@logout'); //登出
     Route::post('setpasswd', 'StudentController@setpasswd'); //修改密码
 
+    Route::get('listclasses', 'StudentController@listclasses'); //列出所有教室
+    Route::post('listfree', 'StudentController@listfree'); //列出所有教室
 
 
 });
