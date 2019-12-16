@@ -136,12 +136,37 @@ class StudentController extends Controller
 
     }
 
-    public static function listfree(Request $request){
+    public static function listfree(Request $request)
+    {
+        if($request->input('c_id') ==""){
+            return apiResponse('301', '教室id不能为空。') ;
+        }
+        $data = [];
+        try {
+            $data = Free_class::listfree($request->input('c_id'));
+            if ($data['code'] == '1') {
+                return apiResponse('0', '教室空闲信息获取成功！', $data);
+            } else {
+                return apiResponse('401', '教室不存在！', $data);
+            }
+        } catch (\Exception $e) {
+            return $e;
+            //return $this->internalErrRes();
+        }
+    }
+
+    public static function setfree(Request $request){
+        if($request->input('c_id') =="" or $request->input('week') ==""
+            or $request->input('day') =="" or $request->input('time') ==""){
+            return apiResponse('301', '教室id、申请时间不能为空。') ;
+        }
         $data = [];
         try{
-            $data = Free_class::listfree($request->input('c_id'));
-            if($data['code'] == '1'){
-                return apiResponse('0', '教室空闲信息获取成功！', $data) ;
+            $data = Free_class::setfree($request->id,$request->input('c_id'),$request->input('week'),$request->input('day'),$request->input('time'));
+            if($data['code'] == '2'){
+                return apiResponse('0', '教室空闲申请成功！', $data) ;
+            }else if($data['code'] == '1'){
+                return apiResponse('402', '教室已被占用！', $data) ;
             }else{
                 return apiResponse('401', '教室不存在！', $data) ;
             }
@@ -149,7 +174,6 @@ class StudentController extends Controller
             return $e;
             //return $this->internalErrRes();
         }
-
 
     }
 

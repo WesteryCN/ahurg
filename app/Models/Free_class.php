@@ -93,5 +93,36 @@ class Free_class extends Model
 
     }
 
+    public static function setfree($s_id,$c_id,$week,$day,$time){
+        $data=['code'=>'0'];
+        if(self::isreal($c_id)){
+
+            $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
+            ->where('time',$time)->first();
+            //初始化教室空闲时间
+            if($class){
+                $data=['code'=>'1'];
+                //检测教室当前时间已占用
+            }else{
+                //教室无占用
+                self::insert([
+                    's_id' => $s_id,
+                    'c_id' => $c_id,
+                    'week' => $week,
+                    'day' => $day,
+                    'time' => $time,
+                ]);
+
+                $data=['code'=>'2'];
+
+            }
+            return $data;
+
+        }else{
+            return $data;//教室id不存在
+        }
+
+    }
+
 
 }
