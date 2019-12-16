@@ -64,20 +64,13 @@ class Free_class extends Model
     public static function listfree($class_id){
         $data=['code'=>'0'];
         if(self::isreal($class_id)){
+            $data=['code'=>'1'];
             $class = self::where('c_id',$class_id)->get();
-            $i=1;
-            $i1=1;
-            $i2=1;
+            //初始化教室空闲时间
             for ($ii=1;$ii<=9;$ii++){
                 for ($i1=1;$i1<=7;$i1++){
                     for ($i2=1;$i2<=12;$i2++){
-                        $data=['time'=>array(
-                            $ii =>array(
-                                $i1=>array(
-                                    $i2=>'0'
-                                )
-                            )
-                        )];
+                        $data['time'][$ii][$i1][$i2]=0;
 
                     }
 
@@ -85,13 +78,14 @@ class Free_class extends Model
             }
 
             if($class){
-                $data=['code'=>'1'];
+                foreach ($class as $temp_class){
+                    $data['time'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                }
                 //检测教室有占用情况
             }else{
                 //教室无占用情况
-                $data=['code'=>'1'];
-
             }
+            return $data;
 
         }else{
             return $data;//教室id不存在
