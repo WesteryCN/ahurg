@@ -2,7 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+
 
     /**
      * 安徽大学软件工程概论实验
@@ -134,13 +134,18 @@ class Student extends Model{
             ]);
     }
 
+    /**
+     * @param $userName
+     * @return array
+     * 获取学生个人信息
+     */
+
     public static function getinfo($userName){
         $user = Student::where('s_number', $userName)->first();
         $data=[];
         if($user){
             $data['s_number'] = $user->s_number;
             $data['class_id'] = $user->class_id;
-            $data['class_name'] = Classid::getnamebyid($user->class_id);
             $data['name'] = $user->name;
             $data['sex'] = $user->sex;
             $data['grade'] = $user->grade;
@@ -151,5 +156,10 @@ class Student extends Model{
         return $data;
 
     }
+
+
+
+
+
 
 }
