@@ -117,7 +117,9 @@ class StudentController extends Controller
 
     }
 
-
+    /**
+     * 列出所有教室
+     */
 
     public static function listclasses(Request $request){
         $data = [];
@@ -135,6 +137,10 @@ class StudentController extends Controller
 
 
     }
+
+    /**
+     * 查询教室是否空闲
+     */
 
     public static function listfree(Request $request)
     {
@@ -154,6 +160,10 @@ class StudentController extends Controller
             //return $this->internalErrRes();
         }
     }
+
+    /**
+     * 申请空闲教室
+     */
 
     public static function setfree(Request $request){
         if($request->input('c_id') =="" or $request->input('week') ==""
@@ -176,6 +186,51 @@ class StudentController extends Controller
         }
 
     }
+
+    /**
+     * 删除我申请的空闲教室
+     */
+
+    public static function delmyfree(Request $request)
+    {
+        if($request->input('c_id') =="" or $request->input('week') ==""
+            or $request->input('day') =="" or $request->input('time') ==""){
+            return apiResponse('301', '教室id、申请时间不能为空。') ;
+        }
+        $data = [];
+        try {
+            $data = Free_class::delmyfree($request->id,$request->input('c_id'),$request->input('week'),$request->input('day'),$request->input('time'));
+            if ($data['code'] == '1') {
+                return apiResponse('0', '删除教室空闲成功！', $data);
+            } else {
+                return apiResponse('401', '删除教室空闲失败！', $data);
+            }
+        } catch (\Exception $e) {
+            return $e;
+            //return $this->internalErrRes();
+        }
+    }
+
+    /**
+     * 列出我申请的空闲教室
+     */
+
+    public static function getmyfree(Request $request)
+    {
+        $data = [];
+        try {
+            $data = Free_class::getmyfree($request->id);
+            if ($data['code'] == '1') {
+                return apiResponse('0', '教室空闲信息获取成功！', $data);
+            } else {
+                return apiResponse('401', '教室空闲信息获取失败！', $data);
+            }
+        } catch (\Exception $e) {
+            return $e;
+            //return $this->internalErrRes();
+        }
+    }
+
 
 }
 

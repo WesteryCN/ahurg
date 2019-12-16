@@ -99,7 +99,6 @@ class Free_class extends Model
 
             $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
             ->where('time',$time)->first();
-            //初始化教室空闲时间
             if($class){
                 $data=['code'=>'1'];
                 //检测教室当前时间已占用
@@ -121,6 +120,31 @@ class Free_class extends Model
         }else{
             return $data;//教室id不存在
         }
+
+    }
+
+    public static function getmyfree($s_id){
+        $data=['code'=>'0'];
+        $class = self::where('s_id',$s_id)->get();
+        if($class){
+            foreach ($class as $temp_class){
+                $data['time'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+            }
+            $data['code']=1;
+        }
+        return $data;
+
+    }
+    public static function delmyfree($s_id,$c_id,$week,$day,$time){
+        $data=['code'=>'0'];
+        $class = self::where('s_id',$s_id)->where('c_id',$c_id)->where('week',$week)->where('day',$day)
+            ->where('time',$time)->first();
+        if($class){
+            $class->delete();
+            $data['code']=1;
+        }
+
+        return $data;
 
     }
 

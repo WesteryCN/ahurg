@@ -49,8 +49,10 @@ Route::middleware(['token.checkAndRenew.student'])->prefix('student')->group(fun
     Route::post('setpasswd', 'StudentController@setpasswd'); //修改密码
 
     Route::get('listclasses', 'StudentController@listclasses'); //列出所有教室
+    Route::get('getmyfree', 'StudentController@getmyfree'); //列出我申请的所有教室
     Route::post('listfree', 'StudentController@listfree'); //查询教室空闲时间
     Route::post('setfree', 'StudentController@setfree'); //申请空闲教室
+    Route::post('delmyfree', 'StudentController@delmyfree'); //删除申请空闲教室
 
 
 });
