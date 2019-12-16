@@ -11,13 +11,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
      * i@westery.cn
      */
 class Teacher extends Model{
-    use SoftDeletes;//启动软删除
     /**
      * The attributes that should be mutated to dates.
      *
      * @var array
      */
-    protected $dates = ['deleted_at'];
     /**
      * @var bool 主键是否自增
      */
@@ -25,7 +23,7 @@ class Teacher extends Model{
     /**
      * @var bool 数据表包含created_at和updated_at字段
      */
-    public $timestamps = true;
+    public $timestamps = false;
     /**
      * @var string 模型对应的数据表
      */
