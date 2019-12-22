@@ -158,7 +158,14 @@ class Student extends Model{
     }
 
 
+    public static function getnamebyid($s_id){
+        $user = Student::where('id', $s_id)->first();
+        if($user){
+            return $user->name;
+        }
+        return 0;
 
+    }
 
 
 

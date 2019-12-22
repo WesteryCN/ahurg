@@ -173,12 +173,16 @@ class StudentController extends Controller
         $data = [];
         try{
             $data = Free_class::setfree($request->id,$request->input('c_id'),$request->input('week'),$request->input('day'),$request->input('time'));
-            if($data['code'] == '2'){
+            if($data['code'] == '4'){
                 return apiResponse('0', '教室空闲申请成功！', $data) ;
             }else if($data['code'] == '1'){
-                return apiResponse('402', '教室已被占用！', $data) ;
+                return apiResponse('401', '教室已被占用！', $data) ;
+            }else if($data['code'] == '2'){
+                return apiResponse('402', '你已经申请该教室，请等待管理员审批！', $data) ;
+            }else if($data['code'] == '3'){
+                return apiResponse('403', '已有他人申请该教室！', $data) ;
             }else{
-                return apiResponse('401', '教室不存在！', $data) ;
+                return apiResponse('404', '教室不存在！', $data) ;
             }
         }catch (\Exception $e) {
             return $e;

@@ -1,18 +1,18 @@
 <?php
 namespace App\Http\Middleware;
 use Closure;
-use App\Models\Teacher;
+use App\Models\Admin;
 
 /**
- * 安徽大学数据库课程设计
- * 教师中间件模块
+ * 安徽大学软件工程概论实验
+ * 管理员中间件模块
  * by: 刘方祥
  * i@2git.cn
  * i@westery.cn
  */
 
 
-class CheckAndRenewTokenTeacher
+class CheckAndRenewTokenAdmin
 {
     public function handle($request, Closure $next)
     {
@@ -30,7 +30,7 @@ class CheckAndRenewTokenTeacher
         }
 
         try {
-            $user = Teacher::getUserByToken($token);
+            $user = Admin::getUserByToken($token);
 
             if(!$user){
                 return apiResponse('401',"token无效!",$token);
@@ -45,7 +45,7 @@ class CheckAndRenewTokenTeacher
             'name' => $user['name'],
             'token' => $user['token']
         ];
-        Teacher::renewToken($token);
+        Admin::renewToken($token);
         $request->merge($data);
         return $next($request);
 

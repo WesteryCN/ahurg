@@ -21,24 +21,22 @@ use Illuminate\Http\Request;
   */
 
 
-Route::post('teacher/login','TeacherController@login');
-Route::post('teacher/loginc','TeacherController@logincookie');
+Route::post('admin/login','AdminController@login');
+Route::post('admin/loginc','AdminController@logincookie');
 
 Route::post('student/login','StudentController@login');
 Route::post('student/loginc','StudentController@logincookie');
 
-//教师管理模块
-Route::middleware(['token.checkAndRenew.teacher'])->prefix('teacher')->group(function () {
-    Route::post('info', 'TeacherController@getTeacherInfo'); //调取教师信息
-    Route::get('info', 'TeacherController@getTeacherInfo'); //调取教师信息
-    Route::get('logout', 'TeacherController@logout'); //登出
-    Route::post('setpasswd', 'TeacherController@setpasswd'); //置密码
-    Route::get('liststd', 'TeacherController@liststd'); //列出所有学生
-    Route::post('liststd', 'TeacherController@liststd'); //列出所有学生
-    Route::post('addstd', 'TeacherController@addstd'); //增加学生
-    Route::post('delstd', 'TeacherController@delstd'); //删除学生
-    Route::post('setstdinfo', 'TeacherController@setstdinfo'); //修改学生信息
+//管理员管理模块
+Route::middleware(['token.checkAndRenew.admin'])->prefix('admin')->group(function () {
+    Route::post('info', 'AdminController@getAdminInfo'); //调取管理员信息
+    Route::get('info', 'AdminController@getAdminInfo'); //调取管理员信息
+    Route::get('logout', 'AdminController@logout'); //登出
+    Route::post('setpasswd', 'AdminController@setpasswd'); //置密码
 
+    Route::get('getallfree', 'AdminController@getallfree'); //列出所有教室
+    Route::post('allowfree', 'AdminController@allowfree'); //同意申请空闲教室
+    Route::post('delfree', 'AdminController@delfree'); //删除申请空闲教室
 
 });
 

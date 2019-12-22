@@ -78,8 +78,10 @@ class Free_class extends Model
             }
 
             if($class){
-                foreach ($class as $temp_class){
-                    $data['time'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                foreach ($class as $temp_class) {
+                    //if($temp_class->allowed == 1) {
+                    $data['time'][$temp_class->week][$temp_class->day][$temp_class->time] = 1;
+                //}
                 }
                 //检测教室有占用情况
             }else{
@@ -100,7 +102,21 @@ class Free_class extends Model
             $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
             ->where('time',$time)->first();
             if($class){
-                $data=['code'=>'1'];
+                if($class -> allowed == 1){
+                    //检测到已经被占用
+                    $data=['code'=>'1'];
+                }else
+                {
+                    if($class -> s_id == $s_id)
+                    {
+                        $data=['code'=>'2'];
+                        //是否是自己提交的申请
+                    } else{
+                        //已经有他人申请
+                        $data=['code'=>'3'];
+                        }
+                }
+
                 //检测教室当前时间已占用
             }else{
                 //教室无占用
@@ -110,9 +126,10 @@ class Free_class extends Model
                     'week' => $week,
                     'day' => $day,
                     'time' => $time,
+                    'allowed' => 0,
                 ]);
 
-                $data=['code'=>'2'];
+                $data=['code'=>'3'];
 
             }
             return $data;
@@ -128,13 +145,19 @@ class Free_class extends Model
         $class = self::where('s_id',$s_id)->get();
         if($class){
             foreach ($class as $temp_class){
-                $data['time'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                if($temp_class->allowed == 1){
+                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                }
+                else{
+                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                }
             }
             $data['code']=1;
         }
         return $data;
 
     }
+
     public static function delmyfree($s_id,$c_id,$week,$day,$time){
         $data=['code'=>'0'];
         $class = self::where('s_id',$s_id)->where('c_id',$c_id)->where('week',$week)->where('day',$day)
@@ -148,5 +171,53 @@ class Free_class extends Model
 
     }
 
+    public static function getallfree(){
+        $data=['code'=>'0'];
+        $class = self::where('id','>',0)->get();
+        if($class){
+            foreach ($class as $temp_class){
+                if($temp_class->allowed == 1){
+                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
+                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
+                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
+                }
+                else{
+                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
+                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
+                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
+                }
+            }
+            $data['code']=1;
+        }
+        return $data;
 
+    }
+
+    public static function delfree($c_id,$week,$day,$time){
+        $data=['code'=>'0'];
+        $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
+            ->where('time',$time)->first();
+        if($class){
+            $class->delete();
+            $data['code']=1;
+        }
+
+        return $data;
+
+    }
+
+    public static function allowfree($c_id,$week,$day,$time){
+        $data=['code'=>'0'];
+        $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
+            ->where('time',$time)->first();
+        if($class){
+            $class->update([
+                'allowed' => '1'
+            ]);
+            $data['code']=1;
+        }
+
+        return $data;
+
+    }
 }

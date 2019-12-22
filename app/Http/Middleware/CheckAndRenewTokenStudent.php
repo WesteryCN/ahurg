@@ -4,7 +4,7 @@ use Closure;
 use App\Models\Student;
 
 /**
- * 安徽大学数据库课程设计
+ * 安徽大学软件工程概论实验
  * 学生中间件模块
  * by: 刘方祥
  * i@2git.cn

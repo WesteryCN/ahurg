@@ -2,15 +2,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
-    /**
-     * 安徽大学数据库课程设计
-     * 教师数据库部分
-     * by: 刘方祥
-     * i@2git.cn
-     * i@westery.cn
-     */
-class Teacher extends Model{
+
+class Admin extends Model{
     /**
      * The attributes that should be mutated to dates.
      *
@@ -27,7 +20,7 @@ class Teacher extends Model{
     /**
      * @var string 模型对应的数据表
      */
-    protected $table = 'teacher';
+    protected $table = 'admin';
     /**
      * @var string 主键名
      */
@@ -51,7 +44,7 @@ class Teacher extends Model{
 
     public static function getUser($userName, $psw)
     {
-        $user = Teacher::where('t_number', $userName)->where('password',md5($psw) )->first();
+        $user = Admin::where('a_number', $userName)->where('password',md5($psw) )->first();
         if ($user) {
             $token = substr(md5(strval(uniqid()). 'ahulfx' ), 0, 16);
             $user -> update([
@@ -76,10 +69,10 @@ class Teacher extends Model{
     {
         $data=[];
         $time = date('Y-m-d H:i:s', time());
-        $user = Teacher::where('token', $token)->where('token_expired_at', '>', $time)->first();
+        $user = Admin::where('token', $token)->where('token_expired_at', '>', $time)->first();
         if ($user) {
             $data['id'] = $user['id'];
-            $data['user'] = $user['t_number'];
+            $data['user'] = $user['a_number'];
             $data['name'] = $user['name'];
             $data['token'] = $token;
 
@@ -98,7 +91,7 @@ class Teacher extends Model{
 
     public static function renewToken($token)
     {
-        Teacher::where('token', $token)->first()
+        Admin::where('token', $token)->first()
             ->update([
                 'token_expired_at' => date('Y-m-d H:i:s', time() + 36000)
             ]);
@@ -111,7 +104,7 @@ class Teacher extends Model{
     public static function tokenInvalidate($token)
     {
         $time = date('Y-m-d H:i:s', time());
-        $user = Teacher::where('token', $token)->first();
+        $user = Admin::where('token', $token)->first();
         if ($user)
             $user->update([
                 'token_expired_at' => $time
@@ -125,7 +118,7 @@ class Teacher extends Model{
     public static function setPasswd($userName, $passwd)
     {
         $time = date('Y-m-d H:i:s', time());
-        Teacher::where('t_number', $userName)->firstOrFail()
+        Admin::where('a_number', $userName)->firstOrFail()
             ->update([
                 'password' => md5($passwd),
                 'token_expired_at' => $time
@@ -133,16 +126,16 @@ class Teacher extends Model{
     }
 
     /**
-     * 通过id 获取教师信息
+     * 通过id 获取管理员信息
      */
 
-    public static function getTeacherInfoById($t_id){
-        $user = Teacher::where('id','=' ,$t_id)->first();
+    public static function getAdminInfoById($t_id){
+        $user = Admin::where('id','=' ,$t_id)->first();
         $data = ['code' => '0'];
         if ($user)
             $data = [
-                't_id' => $user ->id,
-                't_number' => $user -> t_number,
+                'a_id' => $user ->id,
+                'a_number' => $user -> t_number,
                 'name' => $user ->name,
                 'code' => '1',
             ];
