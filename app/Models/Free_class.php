@@ -79,9 +79,9 @@ class Free_class extends Model
 
             if($class){
                 foreach ($class as $temp_class) {
-                    //if($temp_class->allowed == 1) {
+                    if($temp_class->allowed == 1 or $temp_class->allowed == 2) {
                     $data['time'][$temp_class->week][$temp_class->day][$temp_class->time] = 1;
-                //}
+                    }
                 }
                 //检测教室有占用情况
             }else{
@@ -129,7 +129,7 @@ class Free_class extends Model
                     'allowed' => 0,
                 ]);
 
-                $data=['code'=>'3'];
+                $data=['code'=>'4'];
 
             }
             return $data;
@@ -145,12 +145,20 @@ class Free_class extends Model
         $class = self::where('s_id',$s_id)->get();
         if($class){
             foreach ($class as $temp_class){
-                if($temp_class->allowed == 1){
-                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
-                }
-                else{
-                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
-                }
+                //if($temp_class->allowed == 1){
+                    $data['time'][$temp_class->id] = array([
+                        'c_name' => Classes::getnamebyid($temp_class->c_id),
+                        'c_id'=>$temp_class->c_id,
+                        'week'=>$temp_class->week,
+                        'day' =>$temp_class->day,
+                        'time' => $temp_class->time,
+                        'status' =>$temp_class->allowed,
+                        's_id'=>$temp_class->s_id,
+                        's_name'=>Student::getnamebyid($temp_class->s_id),
+
+                    ]);
+                    //$data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
+                //}
             }
             $data['code']=1;
         }
@@ -176,16 +184,27 @@ class Free_class extends Model
         $class = self::where('id','>',0)->get();
         if($class){
             foreach ($class as $temp_class){
-                if($temp_class->allowed == 1){
-                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
-                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
-                    $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
-                }
-                else{
-                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
-                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
-                    $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
-                }
+                $data['time'][$temp_class->id] = array([
+                    'c_name' => Classes::getnamebyid($temp_class->c_id),
+                    'c_id'=>$temp_class->c_id,
+                    'week'=>$temp_class->week,
+                    'day' =>$temp_class->day,
+                    'time' => $temp_class->time,
+                    'status' =>$temp_class->allowed,
+                    's_id'=>$temp_class->s_id,
+                    's_name'=>Student::getnamebyid($temp_class->s_id),
+
+                ]);
+                //if($temp_class->allowed == 1){
+                   // $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
+                   // $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
+                    //$data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
+               // }
+                //else{
+                  //  $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
+                  //  $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
+                  //  $data['noallowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_name']=Student::getnamebyid($temp_class->s_id);
+               // }
             }
             $data['code']=1;
         }
@@ -206,14 +225,20 @@ class Free_class extends Model
 
     }
 
-    public static function allowfree($c_id,$week,$day,$time){
+    public static function setstatus($c_id,$week,$day,$time,$status){
         $data=['code'=>'0'];
         $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
             ->where('time',$time)->first();
         if($class){
-            $class->update([
-                'allowed' => '1'
-            ]);
+            if($status == '1'){
+                $class->update([
+                    'allowed' => '1'
+                ]);
+            }else{
+                $class->update([
+                    'allowed' => '2'
+                ]);
+            }
             $data['code']=1;
         }
 

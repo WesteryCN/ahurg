@@ -35,7 +35,8 @@ Route::middleware(['token.checkAndRenew.admin'])->prefix('admin')->group(functio
     Route::post('setpasswd', 'AdminController@setpasswd'); //置密码
 
     Route::get('getallfree', 'AdminController@getallfree'); //列出所有教室
-    Route::post('allowfree', 'AdminController@allowfree'); //同意申请空闲教室
+    Route::post('setstatus', 'AdminController@setstatus'); //修改申请空闲教室的状态
+
     Route::post('delfree', 'AdminController@delfree'); //删除申请空闲教室
 
 });

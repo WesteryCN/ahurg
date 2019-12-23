@@ -177,19 +177,19 @@ class AdminController extends Controller
      * 删除申请的空闲教室
      */
 
-    public static function allowfree(Request $request)
+    public static function setstatus(Request $request)
     {
         if($request->input('c_id') =="" or $request->input('week') ==""
-            or $request->input('day') =="" or $request->input('time') ==""){
-            return apiResponse('301', '教室id、申请时间不能为空。') ;
+            or $request->input('day') =="" or $request->input('time') =="" or $request->input('status') ==""){
+            return apiResponse('301', '教室id、申请时间、同意状态不能为空。') ;
         }
         $data = [];
         try {
-            $data = Free_class::allowfree($request->input('c_id'),$request->input('week'),$request->input('day'),$request->input('time'));
+            $data = Free_class::setstatus($request->input('c_id'),$request->input('week'),$request->input('day'),$request->input('time'),$request->input('status'));
             if ($data['code'] == '1') {
-                return apiResponse('0', '同意申请成功！', $data);
+                return apiResponse('0', '修改申请状态成功！', $data);
             } else {
-                return apiResponse('401', '同意申请失败！', $data);
+                return apiResponse('401', '修改申请状态失败！', $data);
             }
         } catch (\Exception $e) {
             return $e;

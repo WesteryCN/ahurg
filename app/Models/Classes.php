@@ -4,6 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use phpDocumentor\Reflection\Types\Self_;
 
 class Classes extends Model
 {
@@ -31,6 +32,16 @@ class Classes extends Model
      * @var array 为空，则所有字段可集体赋值
      */
     protected $guarded = [];
+
+
+    public static function getnamebyid($c_id){
+        $user = Classes::where('id', $c_id)->first();
+        if($user){
+            return $user->class_name;
+        }
+        return 0;
+
+    }
 
 
 
