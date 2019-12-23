@@ -33,7 +33,6 @@ class Free_class extends Model
     protected $guarded = [];
 
 
-
     public static function listclass(){
             $data=['code'=>'0'];
             $classes = Classes::where('id','>','0')->get();
@@ -161,19 +160,21 @@ class Free_class extends Model
         $data=['code'=>'0'];
         $class = self::where('s_id',$s_id)->get();
         if($class){
+            $data['time'] = [];
             foreach ($class as $temp_class){
                 //if($temp_class->allowed == 1){
-                    $data['time'][$temp_class->id] = array([
-                        'c_name' => Classes::getnamebyid($temp_class->c_id),
-                        'c_id'=>$temp_class->c_id,
-                        'week'=>$temp_class->week,
-                        'day' =>$temp_class->day,
-                        'time' => $temp_class->time,
-                        'status' =>$temp_class->allowed,
-                        's_id'=>$temp_class->s_id,
-                        's_name'=>Student::getnamebyid($temp_class->s_id),
+                array_push($data['time'],[
+                    'c_name' => Classes::getnamebyid($temp_class->c_id),
+                    'c_id'=>$temp_class->c_id,
+                    'week'=>$temp_class->week,
+                    'day' =>$temp_class->day,
+                    'time' => $temp_class->time,
+                    'status' =>$temp_class->allowed,
+                    's_id'=>$temp_class->s_id,
+                    's_name'=>Student::getnamebyid($temp_class->s_id),
 
-                    ]);
+                ]);
+                   // $data['time'] = array();
                     //$data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]=1;
                 //}
             }
@@ -198,10 +199,11 @@ class Free_class extends Model
 
     public static function getallfree(){
         $data=['code'=>'0'];
+        $data['time'] = [];
         $class = self::where('id','>',0)->get();
         if($class){
             foreach ($class as $temp_class){
-                $data['time'][$temp_class->id] = array([
+                array_push($data['time'],[
                     'c_name' => Classes::getnamebyid($temp_class->c_id),
                     'c_id'=>$temp_class->c_id,
                     'week'=>$temp_class->week,
@@ -212,6 +214,18 @@ class Free_class extends Model
                     's_name'=>Student::getnamebyid($temp_class->s_id),
 
                 ]);
+                /*
+                $data['time'][$temp_class->id] = array([
+                    'c_name' => Classes::getnamebyid($temp_class->c_id),
+                    'c_id'=>$temp_class->c_id,
+                    'week'=>$temp_class->week,
+                    'day' =>$temp_class->day,
+                    'time' => $temp_class->time,
+                    'status' =>$temp_class->allowed,
+                    's_id'=>$temp_class->s_id,
+                    's_name'=>Student::getnamebyid($temp_class->s_id),
+
+                ]);*/
                 //if($temp_class->allowed == 1){
                    // $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['real']=1;
                    // $data['allowedtime'][$temp_class->week][$temp_class->day][$temp_class->time]['s_id']=$temp_class->s_id;
