@@ -100,21 +100,38 @@ class Free_class extends Model
         if(self::isreal($c_id)){
 
             $class = self::where('c_id',$c_id)->where('week',$week)->where('day',$day)
-            ->where('time',$time)->first();
+            ->where('time',$time)->where('allowed','<','2')->first();
             if($class){
                 if($class -> allowed == 1){
                     //检测到已经被占用
                     $data=['code'=>'1'];
                 }else
                 {
-                    if($class -> s_id == $s_id)
-                    {
-                        $data=['code'=>'2'];
-                        //是否是自己提交的申请
-                    } else{
-                        //已经有他人申请
-                        $data=['code'=>'3'];
+                    if($class -> allowed == 0){
+                        if($class -> s_id == $s_id)
+                        {
+                            $data=['code'=>'2'];
+                            //是否是自己提交的申请
                         }
+                        else{
+                            //已经有他人申请
+                            $data=['code'=>'3'];
+                        }
+                    }else{
+                        //教室申请已被拒绝，可重新申请
+                        self::insert([
+                            's_id' => $s_id,
+                            'c_id' => $c_id,
+                            'week' => $week,
+                            'day' => $day,
+                            'time' => $time,
+                            'allowed' => 0,
+                        ]);
+
+                        $data=['code'=>'4'];
+                    }
+
+
                 }
 
                 //检测教室当前时间已占用
