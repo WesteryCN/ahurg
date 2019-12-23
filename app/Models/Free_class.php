@@ -78,7 +78,7 @@ class Free_class extends Model
 
             if($class){
                 foreach ($class as $temp_class) {
-                    if($temp_class->allowed == 1 or $temp_class->allowed == 2) {
+                    if($temp_class->allowed == 0 or $temp_class->allowed == 1) {
                     $data['time'][$temp_class->week][$temp_class->day][$temp_class->time] = 1;
                     }
                 }
